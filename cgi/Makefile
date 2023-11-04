@@ -4,7 +4,7 @@ AR=ar
 RANLIB=ranlib
 LIBS=-L./ -lcgic -lsqlite3
 
-all: libcgic.a cgictest.cgi capture view
+all: libcgic.a cgictest.cgi capture view random_vidoe
 
 install: libcgic.a
 	cp libcgic.a /usr/local/lib
@@ -27,8 +27,11 @@ capture: capture.o libcgic.a
 view: view.o libcgic.a
 	gcc view.o -o view.cgi ${LIBS}
 
+random_vidoe: random_vidoe.o libcgic.a
+	gcc random_vidoe.o -o random_vidoe.cgi ${LIBS}
+
 clean:
-	rm -f *.o *.a cgictest.cgi capture cgicunittest view.cgi
+	rm -f *.o *.a cgictest.cgi capture cgicunittest view.cgi random_vidoe.cgi
 
 test:
 	gcc -D UNIT_TEST=1 cgic.c -o cgicunittest

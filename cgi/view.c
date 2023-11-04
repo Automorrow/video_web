@@ -28,47 +28,12 @@ int cgiMain() {
         fprintf(cgiOut, "<HTML>\n");
         fprintf(cgiOut, "<HTML><HEAD>\n");
         fprintf(cgiOut, "<meta charset=\"Unicode\">\n");
-        fprintf(cgiOut, "<TITLE>video</TITLE></HEAD>\n");
+        fprintf(cgiOut, "<TITLE>video</TITLE><script>\n");
+        fprintf(cgiOut, "</script></HEAD>\n");
         fprintf(cgiOut, "<BODY>");
         fprintf(cgiOut, "<table><tbody>");
         sqlite3_open_result = sqlite3_open("video.db", &g_view.db);
         if (sqlite3_open_result == SQLITE_OK) {
-            char sql_select_buf[] = "SELECT * FROM video;";
-            char **result = 0;
-            int nrow = 0;
-            int ncolumn = 0;
-            char *errmsg;
-            int rc = sqlite3_get_table(g_view.db, sql_select_buf, &result, &nrow, &ncolumn, &errmsg);
-            if (rc == SQLITE_OK) {
-                if (nrow) {
-                    char access_buf[1024] = {0};
-                    srand((unsigned)time(NULL));
-                    int rand_value;
-                    int f_exit = -1;
-                    do {
-                        //getpid 获取当前进程ID，使不同网页同时刷新得到的rand_value不相同
-                        rand_value = (rand() + getpid()) % nrow + 1;
-                        sprintf(access_buf, "/www%s", result[rand_value]);
-                        f_exit = access(access_buf, F_OK);
-                        if (f_exit) {
-                            //DELETE FROM video WHERE path = "aaa";
-                            sprintf(access_buf, "DELETE FROM video WHERE path = \"%s\";", result[rand_value]);
-                            if (SQLITE_OK != sqlite3_exec(g_view.db, access_buf, 0, 0, &errmsg)) {
-                                sqlite3_free(errmsg);
-                            }
-                        }
-                    } while (f_exit);
-                    //fprintf(cgiOut, "rand_value %d nrow %d ncolumn %d %s", rand_value, nrow, ncolumn, result[nrow]);
-                    //fprintf(cgiOut, "getpid %d", getpid());
-                    fprintf(cgiOut, "<video width=\"900\" height=\"600\" controls>");
-                    fprintf(cgiOut, "<source src=\"%s\" type=\"video/mp4\">", result[rand_value]);
-                    fprintf(cgiOut, "</video>");
-                }
-                sqlite3_free_table(result);
-            } else {
-                sqlite3_free(errmsg);
-            }
-            
         }
         g_view.dirp = readdir(g_view.dp);
         g_view.dirp = readdir(g_view.dp);
