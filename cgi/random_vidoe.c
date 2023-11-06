@@ -27,6 +27,14 @@ int cgiMain() {
         fprintf(cgiOut, "<HTML><HEAD>\n");
         fprintf(cgiOut, "<meta charset=\"Unicode\">\n");
         fprintf(cgiOut, "<TITLE>random</TITLE>\n");
+
+        printf("<script>        function check(){");
+        printf("    var video = document.getElementById('random');");
+        printf("    video.addEventListener('ended', function() {");
+        printf("        location.reload();");
+        printf("    }, false);");
+        printf("}");
+        printf("</script>");
         fprintf(cgiOut, "</HEAD>\n");
         fprintf(cgiOut, "<BODY>");
         sqlite3_open_result = sqlite3_open("video.db", &g_view.db);
@@ -58,7 +66,7 @@ int cgiMain() {
                     } while (f_exit);
                     //fprintf(cgiOut, "rand_value %d nrow %d ncolumn %d %s", rand_value, nrow, ncolumn, result[nrow]);
                     //fprintf(cgiOut, "getpid %d", getpid());
-                    fprintf(cgiOut, "<video width=\"900\" height=\"600\" controls>");
+                    fprintf(cgiOut, "<video width=\"100%%\" height=\"100%%\" id='random' autoplay='autoplay' controls>");
                     fprintf(cgiOut, "<source src=\"%s\" type=\"video/mp4\">", result[rand_value]);
                     fprintf(cgiOut, "</video>");
                 }
@@ -68,6 +76,9 @@ int cgiMain() {
             }
             
         }
+        printf("<script>");
+        printf("check(); ");
+        printf("</script>");
         //fprintf(cgiOut, "<meta http-equiv=\"refresh\" content=\"20;url=view.cgi\">");
         fprintf(cgiOut, "</BODY>");
         fprintf(cgiOut, "</HTML>\n");
